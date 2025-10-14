@@ -1,0 +1,152 @@
+<div class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+  <div class="bg-white shadow-lg rounded-xl w-full max-w-3xl relative max-h-[90vh] overflow-y-auto p-8">
+    <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">Add Product</h2>
+
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Title -->
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Product Title</label>
+          <input id="title" type="text" formControlName="title" placeholder="Product Title"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('title')?.touched && productForm.get('title')?.invalid"
+            class="text-red-600 text-sm mt-1">Title is required</div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <input id="description" type="text" formControlName="description" placeholder="Description"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('description')?.touched && productForm.get('description')?.invalid"
+            class="text-red-600 text-sm mt-1">Description is required</div>
+        </div>
+
+        <!-- Brand -->
+        <div>
+          <label for="brand" class="block text-sm font-medium text-gray-700 mb-1">Brand</label>
+          <input id="brand" type="text" formControlName="brand" placeholder="Brand"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('brand')?.touched && productForm.get('brand')?.invalid"
+            class="text-red-600 text-sm mt-1">Brand is required</div>
+        </div>
+
+        <!-- Thumbnail URL -->
+        <!-- <div>
+          <label for="thumbnail_url" class="block text-sm font-medium text-gray-700 mb-1">Thumbnail URL</label>
+          <input id="thumbnail_url" type="text" formControlName="thumbnail_url" placeholder="Thumbnail URL"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div> -->
+
+        <!-- Created At -->
+        <div>
+          <label for="created_at" class="block text-sm font-medium text-gray-700 mb-1">Created At</label>
+          <input id="created_at" type="date" formControlName="created_at"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('created_at')?.touched && productForm.get('created_at')?.invalid"
+            class="text-red-600 text-sm mt-1">Date is required</div>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <input id="price" type="number" formControlName="price" placeholder="Price"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('price')?.touched && productForm.get('price')?.invalid"
+            class="text-red-600 text-sm mt-1">Price is required and must be at least 1</div>
+        </div>
+
+        <!-- Stock Quantity -->
+        <div>
+          <label for="stock_quantity" class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+          <input id="stock_quantity" type="number" formControlName="stock_quantity" placeholder="Stock Quantity"
+            class="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <div *ngIf="productForm.get('stock_quantity')?.touched && productForm.get('stock_quantity')?.invalid"
+            class="text-red-600 text-sm mt-1">Quantity is required and cannot be negative</div>
+        </div>
+      </div>
+      <!-- Is Digital Toggle -->
+      <!-- Both Toggles in One Row -->
+      <div class="flex items-center gap-12 mt-6">
+
+        <!-- Is Digital Toggle -->
+        <div class="flex items-center gap-4">
+          <label for="isDigital" class="block text-sm font-medium text-gray-700">Is Digital Product?</label>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="isDigital" formControlName="isDigital" class="sr-only peer" />
+            <div
+              class="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300">
+            </div>
+            <div
+              class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 peer-checked:translate-x-5">
+            </div>
+          </label>
+          <span class="text-sm text-gray-600">
+            {{ productForm.get('isDigital')?.value ? 'Digital' : 'Physical' }}
+          </span>
+        </div>
+
+        <!-- Product Status Toggle -->
+        <div class="flex items-center gap-4">
+          <label class="block text-sm font-semibold text-gray-800">Product Status</label>
+          <label class="relative inline-flex items-center cursor-pointer group">
+            <input type="checkbox" [checked]="productForm.get('status')?.value === 'T'"
+              (change)="onStatusToggle($event.target.checked)" class="sr-only" />
+            <div class="w-14 h-8 bg-gray-300 rounded-full transition-all duration-300 shadow-inner"
+              [class.bg-green-500]="productForm.get('status')?.value === 'T'"></div>
+            <div class="absolute left-1 top-1 w-6 h-6 bg-white rounded-full shadow-md transition-transform duration-300"
+              [class.translate-x-6]="productForm.get('status')?.value === 'T'"></div>
+          </label>
+          <span class="text-sm font-medium transition-colors duration-300"
+            [class.text-green-600]="productForm.get('status')?.value === 'T'"
+            [class.text-gray-500]="productForm.get('status')?.value === 'F'">
+            {{ productForm.get('status')?.value === 'T' ? '✅ Active' : '🚫 Inactive' }}
+          </span>
+        </div>
+      </div>
+
+
+      <!-- File Upload -->
+      <div class="mt-6">
+        <label for="productImages" class="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+        <label
+          class="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md border border-dashed border-gray-400 inline-block">
+          📁 Select Images
+          <input id="productImages" type="file" class="hidden" (change)="onFileSelected($event)" accept="image/*"
+            multiple>
+        </label>
+
+        <!-- Previews -->
+        <div *ngIf="selectedImagesPreview.length > 0" class="mt-4 flex flex-wrap gap-3">
+          <div *ngFor="let preview of selectedImagesPreview" class="w-24 h-24 rounded overflow-hidden border">
+            <img [src]="preview" alt="Preview" class="object-cover w-full h-full" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-4 pt-4 border-t mt-8">
+        <button type="button" class="bg-gray-500 text-white px-5 py-2 rounded hover:bg-gray-600"
+          (click)="close()">Cancel</button>
+        <button type="submit" [disabled]="isSaving || productForm.invalid"
+          class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center gap-2">
+
+          <!-- Spinner (Only when saving) -->
+          <svg *ngIf="isSaving" class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+
+          <span>{{ isSaving ? 'Saving...' : 'Save Product' }}</span>
+        </button>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="errorMsg" class="text-red-600 mt-4 font-semibold">
+        {{ errorMsg }}
+      </div>
+    </form>
+  </div>
+</div>

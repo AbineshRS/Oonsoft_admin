@@ -1,0 +1,135 @@
+<div *ngIf="isLoading" class="fixed inset-0 z-50 bg-white bg-opacity-80 flex items-center justify-center">
+    <div class="text-center">
+        <svg class="animate-spin h-10 w-10 text-blue-600 mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        <p class="mt-4 text-gray-700 font-medium text-sm">Loading, please wait...</p>
+    </div>
+</div>
+<div class="flex h-screen bg-gray-100">
+    <aside [class.w-64]="isSidebarOpen" [class.w-16]="!isSidebarOpen"
+        class="transition-all duration-300 bg-white shadow-md min-h-screen overflow-hidden">
+        <app-side-menubar [isSidebarOpen]="isSidebarOpen"></app-side-menubar>
+    </aside>
+
+    <div class="flex-1 flex flex-col">
+        <app-header (toggleSidebarEvent)="toggleSidebar()"></app-header>
+
+        <div class="min-h-screen w-full p-6 bg-white">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Chekout List</h2>
+                <!-- <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                    + Add Category
+                </button> -->
+            </div>
+
+            <div class="flex flex-wrap gap-4 items-center mb-4">
+                <div class="relative w-full md:w-1/3">
+                    <input type="text" placeholder="Search by checkout id ,user id" class="block w-full border border-gray-300 rounded px-4 py-2 pl-10
+                                 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400
+                                 transition" [(ngModel)]="searchText" (ngModelChange)="search($event)" />
+                    <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="7" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" stroke-linecap="round" />
+                    </svg>
+                </div>
+
+
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-lg shadow">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                        <tr>
+                            <th class="px-4 py-3">
+                                <input type="checkbox" />
+                            </th>
+                            <th class="px-4 py-3">checkout ID</th>
+                            <th class="px-4 py-3">price</th>
+                            <th class="px-4 py-3">Quantity</th>
+                            <th class="px-4 py-3">Date</th>
+                            <th class="px-4 py-3">userId</th>
+                            <th class="px-4 py-3 text-center">status</th>
+                            <th class="px-4 py-3 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700 divide-y divide-transparent">
+                        <tr *ngIf="listOfcheckoutlist?.length === 0">
+                            <td colspan="8" class="text-center text-gray-500 p-4">No data found.</td>
+                        </tr> <!-- ← Add this -->
+                        <tr *ngFor="let user of listOfcheckoutlist | paginate: { itemsPerPage: tableSize, currentPage: page }"
+                            class="hover:bg-gray-50">
+
+                            <td class="px-4 py-3">
+                                <input type="checkbox" />
+                            </td>
+
+                            <td class="px-4 py-3 text-blue-600 font-medium">{{ user.checkout_id }}</td>
+                            <td class="px-4 py-3">{{ user.price }}</td>
+                            <td class="px-4 py-3">{{ user.stock_quantity }}</td>
+                            <td class="px-4 py-3">{{ user.im_Checkoutlists[0].created_at | date: 'dd-MMM-yyyy' }}</td>
+                            <td class="px-4 py-3">{{ user.userId }}</td>
+
+                            <!-- ✅ Wrap status dropdown in <td> -->
+                            <td class="px-4 py-3 text-center">
+                                <select [(ngModel)]="user.im_Checkoutlists[0].status" (change)="onStatusChange(user)"
+                                    [ngClass]="{
+                                    'bg-red-100 text-red-700 border-red-300': user.im_Checkoutlists[0].status === 'F',
+                                    'bg-yellow-100 text-yellow-700 border-yellow-300': user.im_Checkoutlists[0].status === 'P',
+                                    'bg-green-100 text-green-700 border-green-300': user.im_Checkoutlists[0].status === 'T'
+                                }"
+                                    class="w-24 text-xs px-2 py-1 border rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-400">
+                                    <option value="F">In Checkout</option>
+                                    <option value="P">Processing</option>
+                                    <option value="T">Sent</option>
+                                </select>
+                            </td>
+
+                            <td class="px-4 py-3 text-center space-x-2">
+
+                                <!-- View Button (as-is) -->
+                                <button (click)="onView(user.checkout_id, user.address_id)"
+                                    class="group relative inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-semibold text-gray-700 hover:text-indigo-600 hover:border-indigo-500 transition-all duration-300 ease-in-out">
+                                    <svg class="w-4 h-4 text-gray-500 group-hover:text-indigo-600 transition"
+                                        fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span>View</span>
+                                </button>
+
+                                <!-- View PDF Button with Premium Look -->
+                                <button (click)="onViewInvoice(user.checkout_id)"
+                                    class="group inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold text-sm rounded-lg shadow-md hover:from-indigo-700 hover:to-blue-600 transition duration-300 ease-in-out"
+                                    title="View Invoice PDF">
+                                    <!-- PDF / Invoice Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white"
+                                        fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M6 2C4.9 2 4 2.9 4 4v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6H6zm7 7V3.5L18.5 9H13zm-5 4h8v2H8v-2zm0 4h5v2H8v-2z" />
+                                    </svg>
+                                    <span>Invoice PDF</span>
+                                </button>
+
+
+                            </td>
+
+
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div class="flex justify-center mt-5 pt-5">
+                    <pagination-controls (pageChange)="onTableDataChange($event)" [maxSize]="5"></pagination-controls>
+                </div>
+                <app-physical-product-checkout-view *ngIf="Modal" (closeModal)="closeModal()"
+                    [checkoutId]="selectedProductId.toString()" [AddressId]="selectedAddressId.toString()"
+                    (ready)="onChildReady()"></app-physical-product-checkout-view>
+
+            </div>
+        </div>

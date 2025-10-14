@@ -1,0 +1,125 @@
+<!-- MODAL WRAPPER: Only shows when listofProdct has items -->
+<div *ngIf="listofProdct?.length">
+
+  <!-- BACKDROP -->
+  <div class="fixed inset-0 bg-gray-500 opacity-30 z-40" (click)="productClose()"></div>
+
+  <!-- DRAWER PANEL -->
+  <div class="fixed inset-y-0 right-0 w-full sm:w-[700px] bg-white shadow-2xl z-50 overflow-y-auto">
+
+    <!-- CLOSE BUTTON -->
+    <button (click)="productClose()" class="absolute top-6 right-6 text-gray-500 hover:text-gray-800 transition z-50">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- MAIN CONTENT -->
+    <div class="pt-28 px-6 pb-10 bg-gray-50 min-h-full space-y-6">
+
+      <!-- ✅ CUSTOMER INFO AT THE TOP -->
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200 max-w-6xl mx-auto">
+        <h3 class="text-xl font-semibold text-gray-800 mb-6">Customer Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 text-sm text-gray-700">
+          <!-- LEFT: User Info -->
+          <div>
+
+
+            <label class="block text-gray-600 font-medium mb-1">Full Name</label>
+            <div class="text-gray-900 mb-4">{{ listofAddress?.fullName || 'N/A' }}</div>
+
+            <label class="block text-gray-600 font-medium mb-1">Email</label>
+            <div class="text-gray-900">{{ listofAddress?.email || 'N/A' }}</div>
+          </div>
+
+          <!-- RIGHT: Address -->
+          <div>
+            <label class="block text-gray-600 font-medium mb-1">Address</label>
+            <div class="text-gray-900 mb-4">{{ listofAddress?.am_customer_shipping_addresses[0]?.address_1 || 'N/A' }}
+            </div>
+
+            <label class="block text-gray-600 font-medium mb-1">City / State</label>
+            <div class="text-gray-900 mb-4">
+              {{ listofAddress?.am_customer_shipping_addresses[0]?.city || 'N/A' }},
+              {{ listofAddress?.am_customer_shipping_addresses[0]?.state || 'N/A' }}
+            </div>
+
+            <label class="block text-gray-600 font-medium mb-1">Postal Code / Country</label>
+            <div class="text-gray-900">
+              {{ listofAddress?.am_customer_shipping_addresses[0]?.postal_code || 'N/A' }},
+              {{ listofAddress?.am_customer_shipping_addresses[0]?.country || 'N/A' }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ✅ LOOP through each item -->
+      <div *ngFor="let item of listofProdct"
+        class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+        <div class="md:flex">
+
+          <!-- Product Image -->
+          <div class="md:w-1/3 bg-gray-100 flex items-center justify-center p-6">
+            <img [src]="baseUrl + item?.image_url" alt="Product Image"
+              class="rounded-lg shadow-md max-h-64 object-contain" />
+          </div>
+
+          <!-- Product & Key Details -->
+          <div class="md:w-2/3 p-6 space-y-6">
+            <div>
+              <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                {{ item.product_id?.title || item.product_id }}
+              </h2>
+              <p class="text-gray-600 mb-4">
+                {{ item.product_id?.description || 'No description available' }}
+              </p>
+              <div class="flex flex-wrap gap-6 text-sm text-gray-700">
+                <div>
+                  <span class="font-semibold">Price: </span>
+                  <span class="text-green-600 font-medium">${{ item.price }}</span>
+                </div>
+                <div>
+                  <span class="font-semibold">Quantity: </span>
+                  <span>{{ item.stock_quantity }}</span>
+                </div>
+                <div>
+                  <span class="font-semibold">Type: </span>
+                  <span>{{ item.isdigital === 'T' ? 'Digital' : 'Physical' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ✅ "Add" Button only for digital & if stock > 0 -->
+            <div *ngIf="item.isdigital === 'T' && item.stock_quantity > 0 && item.status !== 'T'"
+              class="flex flex-wrap gap-2 mt-2">
+              <button (click)="openAddProductKey(item.checkoutlist_id, item.product_id)"
+                class="group relative inline-flex items-center gap-2 px-4 py-2 bg-green-600 border border-green-600 rounded-lg shadow-md text-sm font-semibold text-white hover:bg-green-700 hover:border-green-700 transition duration-300 ease-in-out">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span class="relative z-10">Add Product Key</span>
+              </button>
+            </div>
+
+            <!-- ❌ Out of Stock Message -->
+            <div *ngIf="item.isdigital === 'T' && item.stock_quantity <= 0" class="text-red-500 font-medium mt-2">
+              Product is out of stock. Cannot add key.
+            </div>
+
+            <!-- Add Product Key Modal (condition-based rendering) -->
+            <app-add-product-key
+              *ngIf="showModal && selectedCheckoutId?.toString() === item.checkoutlist_id?.toString() && ProductId?.toString() === item.product_id?.toString()"
+              [checkoutId]="selectedCheckoutId.toString()" [ProductId]="ProductId.toString()"
+              (closeModal)="onModalClosed()">
+            </app-add-product-key>
+
+          </div>
+        </div>
+      </div> <!-- End Product Card -->
+
+    </div> <!-- End Content -->
+  </div> <!-- End Drawer -->
+</div> <!-- End Modal -->
