@@ -82,7 +82,7 @@ export class Login {
           true,   // dismissible
           true    // show icon
         )
-        this.router.navigate(['product_list']);
+        this.router.navigate(['digital_product_list']);
         const seller = res?.data;
         if (seller?.seller_id) {
           sessionStorage.setItem('seller_id', seller.seller_id);

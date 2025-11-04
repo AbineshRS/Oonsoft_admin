@@ -44,8 +44,8 @@ export class SignalRService {
             callback(userId);
         })
     }
-    public onOonsoftproducts(callback:(Oonsoft_product_id:string)=>void):void{
-        this.hubConnection.on('UpdatedOonsoftproducts',(Oonsoft_product_id:string)=>{
+    public onOonsoftproducts(callback: (Oonsoft_product_id: string) => void): void {
+        this.hubConnection.on('UpdatedOonsoftproducts', (Oonsoft_product_id: string) => {
             callback(Oonsoft_product_id);
         })
     }

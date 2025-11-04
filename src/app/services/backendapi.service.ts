@@ -278,6 +278,9 @@ export class BackendapiService {
             })
         );
     }
+
+
+
     countries_delete(avl_countries_id: string): Observable<any> {
         return this.http.delete(`${environment.ApiUrl}Seller/delete_currency/${avl_countries_id}`).pipe(
             tap(() => {
@@ -305,7 +308,7 @@ export class BackendapiService {
     address_details(AddressId: any): Observable<any> {
         return this.http.get(`${environment.ApiUrl}customer/get_customer_deatils/${AddressId}`).pipe(
             tap(() => {
-                this._refreshNeeded$.next(); // optional side effect
+                this._refreshNeeded$.next();
             })
         );
     }
@@ -316,4 +319,21 @@ export class BackendapiService {
             })
         );
     }
+
+    posttraccp(data: any): Observable<any> {
+        return this.http.post(environment.ApiUrl + 'Traccp/CreateTraccp', data).pipe(
+            tap(() => {
+                this._refreshNeeded$.next();
+            })
+        );
+    }
+
+    gettraccp(traccp_code: any): Observable<any> {
+        return this.http.get(`${this.apiUrl}Traccp/getteaccpbycode/${traccp_code}`);
+    }
+
+    updatetraccp(id: number, data: any): Observable<any> {
+        return this.http.post(environment.ApiUrl + `Traccp/updateTraccp/${id}`, data);
+    }
+
 }

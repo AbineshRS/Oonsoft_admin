@@ -1,0 +1,36 @@
+<div class="flex h-screen bg-gray-100">
+    <aside [class.w-64]="isSidebarOpen" [class.w-16]="!isSidebarOpen"
+        class="transition-all duration-300 bg-white shadow-md min-h-screen overflow-hidden">
+        <app-side-menubar [isSidebarOpen]="isSidebarOpen"></app-side-menubar>
+    </aside>
+
+    <div class="flex-1 flex flex-col">
+        <app-header (toggleSidebarEvent)="toggleSidebar()"></app-header>
+
+        <div class="min-h-screen w-full mb-8 p-6 bg-white">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">Returns Policy</h2>
+                <button (click)="toggleEditMode()"
+                    class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+                    {{ isEditMode ? 'Cancel Edit' : 'Edit' }}
+                </button>
+            </div>
+
+            <form [formGroup]="policyForm" (ngSubmit)="onSubmit()">
+                <div class="flex justify-center">
+                    <div class="w-full">
+                        <quill-editor formControlName="description" [readOnly]="!isEditMode"
+                            [style]="{ height: '450px' }" theme="snow"></quill-editor>
+                    </div>
+                </div>
+
+                <div class="mt-4 mr-6 flex justify-end" *ngIf="isEditMode">
+                    <button type="submit" [disabled]="isLoading"
+                        class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
+                        {{ isLoading ? 'Saving...' : (traccp_id ? 'Update Policy' : 'Save Policy') }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -71,14 +71,6 @@ export class ProductList implements OnInit {
     }
 
     this._getListOfProducts();
-    // this.signalRService.startConnection()
-    //   .then(() => {
-    //     this.signalRService.onProductListUpdate(() => {
-    //       this.ngZone.run(() => {
-    //         this._getListOfProducts();
-    //       });
-    //     });
-    //   })
     this.signalRService.startConnection()
       .then(() => {
         this.signalRService.onSingleProductUpdate(async (productId: string) => {
@@ -111,14 +103,6 @@ export class ProductList implements OnInit {
       }
       this.listOfActiveproducts = [...this.listOfActiveproducts];
     });
-
-    // console.log('list',this.listOfActiveproducts)
-    // this.cdr.detectChanges();
-    // this.ngZone.run(() => {
-    //   this.listOfActiveproducts = [...this.listOfActiveproducts];
-    //   console.log('final',this.listOfActiveproducts)
-    //   this.cdr.detectChanges();
-    // });
   }
 
 

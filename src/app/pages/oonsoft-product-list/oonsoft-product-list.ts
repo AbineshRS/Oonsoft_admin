@@ -36,7 +36,7 @@ export class OonsoftProductList {
   page: number = 1;
   count: number = 0;
   requestLimit: number = 8;
-  tableSize: number = 5;
+  tableSize: number = 6;
   tableSizes: any = [3, 6, 9, 12];
   isLoading = false;
   baseUrl = environment.image;
@@ -45,7 +45,7 @@ export class OonsoftProductList {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
   ngOnInit(): void {
-     this.sellerId = sessionStorage.getItem('seller_id');
+    this.sellerId = sessionStorage.getItem('seller_id');
 
     if (!this.sellerId) {
       this.router.navigate(['']);
@@ -125,7 +125,7 @@ export class OonsoftProductList {
       if (result.isConfirmed) {
         this.service.delete_oonsoft_product(oonsoft_product_id).subscribe({
           next: (res) => {
-             Swal.fire('Deleted!', res.message, 'success');
+            Swal.fire('Deleted!', res.message, 'success');
             this._getListOfProducts();
           }
         })

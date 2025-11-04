@@ -18,6 +18,10 @@ export class SideMenubar {
     this.openDropdown = this.openDropdown === menu ? null : menu;
   }
 
+  OnProductList() {
+    this.router.navigate(['/product_list'])
+  }
+
   navigateToMainLayout() {
     this.router.navigate(['/main-layout']);
   }
@@ -26,11 +30,11 @@ export class SideMenubar {
 
   }
   prodctlist() {
-    
+
     this.router.navigate(['/product_list']);
 
   }
-   customerlist() {
+  customerlist() {
     this.router.navigate(['/customer_list']);
 
   }
@@ -42,13 +46,37 @@ export class SideMenubar {
     this.router.navigate(['/digital_product_listchekout']);
 
   }
-   Oonsoft_products() {
+  Oonsoft_products() {
     this.router.navigate(['/Oonsoft_product_list']);
 
   }
-   countries() {
+  countries() {
     this.router.navigate(['/countries_list']);
 
   }
-  
+
+  termsOfService() {
+    this.router.navigate(['/terms-of-service']);
+  }
+
+  returnsPolicy() {
+    this.router.navigate(['/returns-policy']);
+  }
+
+  acceptableUsePolicy() {
+    this.router.navigate(['/acceptable-use-policy']);
+  }
+
+  cookiePolicy() {
+    this.router.navigate(['/cookie-policy']);
+  }
+
+  cancellationsBilling() {
+    this.router.navigate(['/cancellatioans-and-billing']);
+  }
+
+  privacyPolicy() {
+    this.router.navigate(['/privacy-policy']);
+  }
+
 }

@@ -11,11 +11,13 @@ import { Router } from '@angular/router';
 export class Header {
   activeDropdown: string | null = null;
   activeSlider: string | null = null;
+  isSidebarOpen = false;
   @Output() toggleSidebarEvent = new EventEmitter<void>();
   constructor(private router: Router) { }
   toggleSidebar() {
     this.toggleSidebarEvent.emit();
   }
+
 
   toggleDropdown(menu: string) {
     this.activeDropdown = this.activeDropdown === menu ? null : menu;
