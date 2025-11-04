@@ -36,7 +36,7 @@ export class OonsoftProductList {
   page: number = 1;
   count: number = 0;
   requestLimit: number = 8;
-  tableSize: number = 6;
+  tableSize: number = 8;
   tableSizes: any = [3, 6, 9, 12];
   isLoading = false;
   baseUrl = environment.image;
